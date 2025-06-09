@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cha-na Cake Menu</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for font and background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFCEE; /* Light cream background */
+            color: #333; /* Dark text for readability */
+        }
+        .menu-card {
+            background-color: #FFFFFF; /* White card background */
+            border-radius: 1rem; /* Rounded corners for cards */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        .section-title {
+            color: #8B4513; /* Earthy brown for section titles */
+        }
+        .item-name {
+            color: #4A2B0F; /* Darker brown for item names */
+        }
+        .price {
+            color: #6B8E23; /* Olive green for prices */
+            font-weight: 600; /* Semi-bold price */
+        }
+        .lang-switch {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* text-gray-500 */
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-pink-700 mb-2 drop-shadow-lg">Cha-na Cake</h1>
+            <p class="text-xl text-gray-600">เมนูอาหารและเครื่องดื่ม / Food & Drink Menu</p>
+            <p class="text-md text-gray-500 mt-2">สแกนและเพลิดเพลินกับเมนูของเรา! / Scan and enjoy our menu!</p>
+        </header>
+
+        <!-- Language Switch (Optional - for future enhancement) -->
+        <!--
+        <div class="text-right mb-4">
+            <span class="lang-switch">ภาษา: </span>
+            <a href="#" class="lang-switch font-semibold text-blue-600 hover:underline">ไทย</a> |
+            <a href="#" class="lang-switch hover:underline">English</a>
+        </div>
+        -->
+
+        <!-- Menu Sections Container -->
+        <div class="grid grid-cols-1 gap-8">
+
+            <!-- Category: เมนูอาหาร (Main Dishes) -->
+            <section>
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูอาหาร / Main Dishes</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <!-- Item: ข้าวผัดปู,หมู,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFD700/000000?text=Fried+Rice" alt="ข้าวผัด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวผัดปู,หมู,ทะเล / Fried Rice (Crab, Pork, Seafood)</h3>
+                            <p class="text-gray-500 text-sm">พิเศษ 10.- / ธรรมดา 15.- (Extra 10.- / Regular 15.-)</p>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวกระเพรา ไก่,หมู,หมูกรอบ,รวม,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/8B0000/FFFFFF?text=Basil+Stir-fry" alt="ข้าวกระเพรา" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวกระเพรา ไก่,หมู,หมูกรอบ,รวม,ทะเล / Holy Basil Stir-fry (Chicken, Pork, Crispy Pork, Mixed, Seafood)</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวคะน้าหมูกรอบ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/2E8B57/FFFFFF?text=Crispy+Pork+with+Kale" alt="ข้าวคะน้าหมูกรอบ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวคะน้าหมูกรอบ / Rice with Crispy Pork & Chinese Kale</h3>
+                            <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวหมูทอด -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/CD853F/FFFFFF?text=Fried+Pork+Rice" alt="ข้าวหมูทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวหมูทอด / Fried Pork with Rice</h3>
+                            <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวปีกไก่ทอด -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFD700/FFFFFF?text=Fried+Chicken+Wings" alt="ข้าวปีกไก่ทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวปีกไก่ทอด / Fried Chicken Wings with Rice</h3>
+                            <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวผัดซิก ไก่,หมู,รวม,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/BDB76B/FFFFFF?text=Signature+Fried+Rice" alt="ข้าวผัดซิก" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวผัดซิก ไก่,หมู,รวม,ทะเล / Signature Fried Rice (Chicken, Pork, Mixed, Seafood)</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวผัดเครื่องแกง ไก่,หมู,หมูกรอบ,รวม,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/8B0000/FFFFFF?text=Curry+Paste+Fried+Rice" alt="ข้าวผัดเครื่องแกง" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวผัดเครื่องแกง ไก่,หมู,หมูกรอบ,รวม,ทะเล / Curry Paste Fried Rice (Chicken, Pork, Crispy Pork, Mixed, Seafood)</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวไข่เจียว ธรรมดา,หมูสับ,กุ้ง -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFEFD5/333333?text=Omelette+Rice" alt="ข้าวไข่เจียว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวไข่เจียว ธรรมดา,หมูสับ,กุ้ง / Omelette Rice (Plain, Minced Pork, Shrimp)</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ผัดซีอิ๊ว เส้นใหญ่/เส้นหมี่เหลือง ไก่,หมู,รวม,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/CD5C5C/FFFFFF?text=Pad+See+Ew" alt="ผัดซีอิ๊ว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ผัดซีอิ๊ว เส้นใหญ่/เส้นหมี่เหลือง ไก่,หมู,รวม,ทะเล / Pad See Ew (Big Noodles/Yellow Noodles, Chicken, Pork, Mixed, Seafood)</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ราดหน้า เส้นใหญ่/เส้นบะหมี่กรอบ ไก่,หมู,รวม,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/6A5ACD/FFFFFF?text=Rad+Na" alt="ราดหน้า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ราดหน้า เส้นใหญ่/เส้นบะหมี่กรอบ ไก่,หมู,รวม,ทะเล / Rad Na (Big Noodles/Crispy Noodles, Chicken, Pork, Mixed, Seafood)</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ต้มจืดเต้าหู้หมูสับ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/ADD8E6/333333?text=Tofu+Soup" alt="ต้มจืดเต้าหู้หมูสับ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ต้มจืดเต้าหู้หมูสับ / Clear Soup with Tofu & Minced Pork</h3>
+                            <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวเปล่า -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/F5DEB3/333333?text=Plain+Rice" alt="ข้าวเปล่า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวเปล่า / Plain Rice</h3>
+                            <p class="text-lg price mt-2">ราคา: 20.- / Price: 20 THB</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category: เมนูทานเล่น (Snacks) -->
+            <section>
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูทานเล่น / Snacks</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <!-- Item: เฟรนช์ฟรายส์ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFC0CB/333333?text=French+Fries" alt="เฟรนช์ฟรายส์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">เฟรนช์ฟรายส์ / French Fries</h3>
+                            <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: นักเก็ตช์ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/ADD8E6/333333?text=Chicken+Nuggets" alt="นักเก็ตช์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">นักเก็ตช์ / Chicken Nuggets</h3>
+                            <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ชีสบอล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFDAB9/333333?text=Cheese+Balls" alt="ชีสบอล" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ชีสบอล / Cheese Balls</h3>
+                            <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ปีกไก่ทอด -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFC0CB/333333?text=Fried+Chicken+Wings" alt="ปีกไก่ทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ปีกไก่ทอด / Fried Chicken Wings</h3>
+                            <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: หมูทอด (ทานเล่น) -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/B0E0E6/333333?text=Fried+Pork+Snack" alt="หมูทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">หมูทอด / Fried Pork</h3>
+                            <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category: เมนูของหวาน (Desserts) -->
+            <section>
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูของหวาน / Desserts</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <!-- Item: ฮันนี่โทสต์ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFD700/8B4513?text=Honey+Toast" alt="ฮันนี่โทสต์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ฮันนี่โทสต์ / Honey Toast</h3>
+                            <p class="text-gray-500 text-sm">(ไอศกรีม วานิลลา, สตรอว์เบอร์รี่, ช็อกโกแลต, คุกกี้แอนด์ครีม) / (Vanilla, Strawberry, Chocolate, Cookies & Cream Ice Cream)</p>
+                            <p class="text-lg price mt-2">ราคา: 139.- / Price: 139 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: คาราเมลโทสต์ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/D2B48C/8B4513?text=Caramel+Toast" alt="คาราเมลโทสต์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">คาราเมลโทสต์ / Caramel Toast</h3>
+                            <p class="text-gray-500 text-sm">(ไอศกรีม วานิลลา, สตรอว์เบอร์รี่, ช็อกโกแลต, คุกกี้แอนด์ครีม) / (Vanilla, Strawberry, Chocolate, Cookies & Cream Ice Cream)</p>
+                            <p class="text-lg price mt-2">ราคา: 95.- / Price: 95 THB</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category: เมนูส้มตำ/ยำ (Som Tum / Yum) -->
+            <section>
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูส้มตำ / ยำ / Som Tum / Yum</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <!-- Item: ตำไทย -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFA07A/FFFFFF?text=Papaya+Salad" alt="ตำไทย" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำไทย / Thai Papaya Salad</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำไทยไข่เค็ม -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FF8C00/FFFFFF?text=Salted+Egg+Papaya+Salad" alt="ตำไทยไข่เค็ม" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำไทยไข่เค็ม / Papaya Salad with Salted Egg</h3>
+                            <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำรวมมิตร -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/DAA520/FFFFFF?text=Mixed+Papaya+Salad" alt="ตำรวมมิตร" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำรวมมิตร / Mixed Papaya Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำปูปลาร้า -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/8B0000/FFFFFF?text=Crab+Fermented+Fish+Papaya+Salad" alt="ตำปูปลาร้า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำปูปลาร้า / Papaya Salad with Crab & Fermented Fish Sauce</h3>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำแตง -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/5F9EA0/FFFFFF?text=Cucumber+Salad" alt="ตำแตง" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำแตง / Cucumber Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำหมูยอ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/B22222/FFFFFF?text=Pork+Sausage+Salad" alt="ตำหมูยอ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำหมูยอ / Pork Sausage Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำไหลบัวกุ้งสด -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/4682B4/FFFFFF?text=Lotus+Stem+Shrimp+Salad" alt="ตำไหลบัวกุ้งสด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำไหลบัวกุ้งสด / Lotus Stem & Fresh Shrimp Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำกุ้งสด -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/DC143C/FFFFFF?text=Fresh+Shrimp+Salad" alt="ตำกุ้งสด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำกุ้งสด / Fresh Shrimp Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำเส้นเล็กกุ้งสด -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/4169E1/FFFFFF?text=Vermicelli+Shrimp+Salad" alt="ตำเส้นเล็กกุ้งสด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำเส้นเล็กกุ้งสด / Vermicelli & Fresh Shrimp Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ตำเส้นเล็กหมูยอ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/87CEEB/FFFFFF?text=Vermicelli+Pork+Sausage+Salad" alt="ตำเส้นเล็กหมูยอ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ตำเส้นเล็กหมูยอ / Vermicelli & Pork Sausage Salad</h3>
+                            <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
+                            <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ต้มยำทะเลรวม -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FF6347/FFFFFF?text=Tom+Yum+Seafood" alt="ต้มยำทะเลรวม" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ต้มยำทะเลรวม / Tom Yum Seafood (Spicy Seafood Soup)</h3>
+                            <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ลาบหมู -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/7CFC00/FFFFFF?text=Larb+Moo" alt="ลาบหมู" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ลาบหมู / Spicy Minced Pork Salad (Larb Moo)</h3>
+                            <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ยำมะม่วง -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFD700/8B4513?text=Mango+Salad" alt="ยำมะม่วง" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ยำมะม่วง / Spicy Mango Salad</h3>
+                            <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ยำวุ้นเส้น -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/AFEEEE/333333?text=Glass+Noodle+Salad" alt="ยำวุ้นเส้น" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ยำวุ้นเส้น / Spicy Glass Noodle Salad</h3>
+                            <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ยำมาม่า -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/B0C4DE/333333?text=Mama+Salad" alt="ยำมาม่า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ยำมาม่า / Spicy Instant Noodle Salad</h3>
+                            <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ยำเส้นแก้ว -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/87CEEB/333333?text=Glass+Noodle+Salad" alt="ยำเส้นแก้ว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ยำเส้นแก้ว / Spicy Glass Noodle Salad</h3>
+                            <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ยำรวมมิตร (ยำ) -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFE4B5/333333?text=Mixed+Spicy+Salad" alt="ยำรวมมิตร" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ยำรวมมิตร / Mixed Spicy Salad</h3>
+                            <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวเหนียว -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/F0E68C/333333?text=Sticky+Rice" alt="ข้าวเหนียว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวเหนียว / Sticky Rice</h3>
+                            <p class="text-lg price mt-2">ราคา: 10.- / Price: 10 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: หมูทอด (ส้มตำ/ยำ) -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/DAA520/333333?text=Fried+Pork" alt="หมูทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">หมูทอด / Fried Pork</h3>
+                            <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวผัดเล็ก -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFC0CB/FFFFFF?text=Small+Fried+Rice" alt="ข้าวผัดเล็ก" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวผัดเล็ก / Small Fried Rice</h3>
+                            <p class="text-lg price mt-2">ราคา: 65-75.- / Price: 65-75 THB</p>
+                        </div>
+                    </div>
+                    <!-- Item: ข้าวผัดใหญ่ -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <img src="https://placehold.co/120x120/FFD700/FFFFFF?text=Large+Fried+Rice" alt="ข้าวผัดใหญ่" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-xl font-semibold item-name">ข้าวผัดใหญ่ / Large Fried Rice</h3>
+                            <p class="text-lg price mt-2">ราคา: 130-150.- / Price: 130-150 THB</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>
