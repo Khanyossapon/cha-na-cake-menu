@@ -8,289 +8,92 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        // Global variables provided by Canvas environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        // Initialize Firebase
-        let app;
-        let db;
-        let auth;
-        let userId;
-
-        window.onload = async () => {
-            try {
-                if (Object.keys(firebaseConfig).length === 0) {
-                    console.error("Firebase config is missing. Please ensure __firebase_config is provided.");
-                    return;
-                }
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Sign in anonymously or with custom token if available
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                userId = auth.currentUser?.uid || crypto.randomUUID();
-                console.log("Firebase initialized and user signed in:", userId);
-
-                // Assign Firebase instances to global scope for use in inline script
-                window.firebaseApp = app;
-                window.firestoreDb = db;
-                window.firebaseAuth = auth;
-                window.currentUserId = userId;
-
-                // Bind event listeners only after Firebase is ready
-                bindEventListeners();
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                alertMessage("เกิดข้อผิดพลาดในการเชื่อมต่อระบบ / Error connecting to service.");
-            }
-        };
-
-        let cart = []; // Array to store items in the cart
-
-        function bindEventListeners() {
-            const cartItemCountSpan = document.getElementById('cartItemCount');
-            const viewCartBtn = document.getElementById('viewCartBtn');
-            const cartModalOverlay = document.getElementById('cartModalOverlay');
-            const closeCartModalBtn = document.getElementById('closeCartModal');
-            const cartItemsContainer = document.getElementById('cartItems');
-            const emptyCartMessage = document.getElementById('emptyCartMessage');
-            const cartTotalSpan = document.getElementById('cartTotal');
-            const confirmOrderBtn = document.getElementById('confirmOrderBtn');
-            const orderConfirmationDiv = document.getElementById('orderConfirmation');
-            const customerNameInput = document.getElementById('customerName');
-
-            // Function to update cart display and total
-            function updateCartDisplay() {
-                cartItemsContainer.innerHTML = ''; // Clear current cart items
-                let total = 0;
-
-                if (cart.length === 0) {
-                    emptyCartMessage.classList.remove('hidden');
-                    confirmOrderBtn.disabled = true; // Disable confirm button if cart is empty
-                } else {
-                    emptyCartMessage.classList.add('hidden');
-                    confirmOrderBtn.disabled = false; // Enable confirm button if cart has items
-                    cart.forEach((item, index) => {
-                        const itemElement = document.createElement('div');
-                        itemElement.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'last:border-b-0');
-                        itemElement.innerHTML = `
-                            <div>
-                                <p class="font-semibold">${item.name} <span class="text-gray-600 text-sm">(${item.enName})</span></p>
-                                <p class="text-sm text-gray-500">จำนวน: ${item.quantity} x ${item.price}.-</p>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="font-bold">${(item.quantity * item.price).toFixed(0)}.-</span>
-                                <button class="text-red-500 hover:text-red-700 ml-2 remove-from-cart-btn" data-index="${index}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm2 10a1 1 0 001-1V9a1 1 0 10-2 0v8a1 1 0 001 1z" clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                            </div>
-                        `;
-                        cartItemsContainer.appendChild(itemElement);
-                        total += item.quantity * item.price;
-                    });
-
-                    // Add event listeners for remove buttons
-                    document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
-                        button.addEventListener('click', (event) => {
-                            const index = event.currentTarget.dataset.index;
-                            cart.splice(index, 1); // Remove item from cart array
-                            updateCartDisplay(); // Update display
-                            updateCartCount(); // Update total item count on floating button
-                        });
-                    });
-                }
-                cartTotalSpan.textContent = total.toFixed(0);
-            }
-
-            // Function to update the floating cart item count
-            function updateCartCount() {
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartItemCountSpan.textContent = totalItems;
-            }
-
-            // Add to cart functionality
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const itemCard = event.target.closest('.menu-card');
-                    const itemName = itemCard.dataset.name;
-                    const itemEnName = itemCard.dataset.enName;
-                    const itemPrice = parseFloat(itemCard.dataset.price);
-                    const quantityInput = itemCard.querySelector('.quantity-input');
-                    const quantity = parseInt(quantityInput.value);
-
-                    // Validate quantity
-                    if (isNaN(quantity) || quantity < 1) {
-                        alertMessage('กรุณาระบุจำนวนสินค้าที่ถูกต้อง / Please enter a valid quantity.');
-                        return;
-                    }
-
-                    // Find if item already exists in cart
-                    const existingItemIndex = cart.findIndex(item => item.name === itemName);
-
-                    if (existingItemIndex > -1) {
-                        // Update quantity if item exists
-                        cart[existingItemIndex].quantity += quantity;
-                    } else {
-                        // Add new item to cart
-                        cart.push({
-                            name: itemName,
-                            enName: itemEnName,
-                            price: itemPrice,
-                            quantity: quantity
-                        });
-                    }
-                    quantityInput.value = 1; // Reset quantity input to 1 after adding
-                    updateCartCount();
-                    updateCartDisplay(); // Update cart display in modal (even if not open)
-                    alertMessage('เพิ่มสินค้าลงตะกร้าแล้ว / Item added to cart!');
-                });
-            });
-
-            // Show/Hide Cart Modal
-            viewCartBtn.addEventListener('click', () => {
-                cartModalOverlay.style.display = 'flex'; // Make it visible for transitions
-                setTimeout(() => {
-                    cartModalOverlay.classList.add('show');
-                }, 10);
-                updateCartDisplay(); // Ensure cart is up-to-date when opened
-                orderConfirmationDiv.classList.add('hidden'); // Hide confirmation if modal is re-opened
-            });
-
-            closeCartModalBtn.addEventListener('click', () => {
-                cartModalOverlay.classList.remove('show');
-                orderConfirmationDiv.classList.add('hidden'); // Hide confirmation on close
-                setTimeout(() => {
-                    cartModalOverlay.style.display = 'none';
-                }, 300); // 300ms คือระยะเวลา transition ของ opacity/visibility
-            });
-
-            // Close modal when clicking outside of it
-            cartModalOverlay.addEventListener('click', (event) => {
-                if (event.target === cartModalOverlay) {
-                    cartModalOverlay.classList.remove('show');
-                    orderConfirmationDiv.classList.add('hidden'); // Hide confirmation on close
-                    setTimeout(() => {
-                        cartModalOverlay.style.display = 'none';
-                    }, 300); // 300ms คือระยะเวลา transition ของ opacity/visibility
-                }
-            });
-
-            // Confirm Order (Send to Firestore)
-            confirmOrderBtn.addEventListener('click', async () => {
-                if (cart.length === 0) {
-                    alertMessage('ตะกร้าสินค้าว่างเปล่า ไม่สามารถยืนยันการสั่งซื้อได้ / Cart is empty, cannot confirm order.');
-                    return;
-                }
-
-                const customerName = customerNameInput.value.trim();
-                if (!customerName) {
-                    alertMessage('กรุณาระบุชื่อหรือหมายเลขโต๊ะ / Please enter your name or table number.');
-                    return;
-                }
-
-                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-                if (!paymentMethod) {
-                    alertMessage('กรุณาเลือกวิธีการชำระเงิน / Please select a payment method.');
-                    return;
-                }
-                const selectedPaymentMethod = paymentMethod.value;
-
-                const orderData = {
-                    customerId: window.currentUserId,
-                    customerInfo: customerName,
-                    items: cart,
-                    total: cart.reduce((sum, item) => sum + item.quantity * item.price, 0),
-                    paymentMethod: selectedPaymentMethod,
-                    status: 'New Order', // Initial status
-                    timestamp: serverTimestamp() // Firestore server timestamp
-                };
-
-                try {
-                    const ordersCollectionRef = collection(window.firestoreDb, `artifacts/${appId}/public/data/orders`);
-                    await addDoc(ordersCollectionRef, orderData);
-                    console.log("Order successfully written to Firestore:", orderData);
-
-                    orderConfirmationDiv.classList.remove('hidden');
-                    // Display specific confirmation message
-                    const paymentMessage = selectedPaymentMethod === 'pay_at_counter' ?
-                        'กรุณาแจ้งพนักงานเพื่อชำระเงินที่เคาน์เตอร์ / Please inform staff to pay at the counter.' :
-                        'กรุณาโอนเงินตามข้อมูลที่ร้านจะแจ้งให้ทราบ / Please transfer money as instructed by the shop.';
-                    orderConfirmationDiv.innerHTML = `
-                        <p class="font-semibold">สั่งซื้อสำเร็จ! / Order Confirmed!</p>
-                        <p>หมายเลขลูกค้า/โต๊ะ: <strong>${customerName}</strong></p>
-                        <p>วิธีการชำระเงิน: <strong>${selectedPaymentMethod === 'pay_at_counter' ? 'จ่ายเงินหน้าร้าน' : 'โอนเงิน'}</strong></p>
-                        <p>${paymentMessage}</p>
-                        <p>ทางร้านจะดำเนินการตามคำสั่งซื้อของคุณ / The restaurant will process your order.</p>
-                        <p>กรุณารอรับการยืนยันจากพนักงาน / Please wait for staff confirmation.</p>
-                    `;
-
-                    // Clear cart after order is confirmed
-                    cart = [];
-                    updateCartCount();
-                    updateCartDisplay();
-                    customerNameInput.value = ''; // Clear customer name input
-                } catch (error) {
-                    console.error("Error adding document to Firestore:", error);
-                    alertMessage("เกิดข้อผิดพลาดในการสั่งซื้อ: " + error.message + " / Error placing order: " + error.message);
-                }
-            });
-
-            // Simple custom alert message function (replaces native alert())
-            function alertMessage(message) {
-                const existingAlert = document.getElementById('custom-alert-message');
-                if (existingAlert) {
-                    existingAlert.remove();
-                }
-
-                const alertDiv = document.createElement('div');
-                alertDiv.id = 'custom-alert-message';
-                alertDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md z-[1001] transition-all duration-300 transform scale-0 opacity-0';
-                alertDiv.textContent = message;
-                document.body.appendChild(alertDiv);
-
-                // Show alert
-                setTimeout(() => {
-                    alertDiv.classList.remove('scale-0', 'opacity-0');
-                    alertDiv.classList.add('scale-100', 'opacity-100');
-                }, 10);
-
-                // Hide alert after 3 seconds
-                setTimeout(() => {
-                    alertDiv.classList.remove('scale-100', 'opacity-100');
-                    alertDiv.classList.add('scale-0', 'opacity-0');
-                    setTimeout(() => alertDiv.remove(), 300); // Remove from DOM after transition
-                }, 3000);
-            }
-
-            // Initial update when page loads
-            updateCartCount();
-        }
-    </script>
     <style>
-        /* Your existing styles plus additions */
+        /* Custom styles for font and background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFCEE; /* Light cream background */
+            color: #333; /* Dark text for readability */
+        }
+        .menu-card {
+            background-color: #FFFFFF; /* White card background */
+            border-radius: 1rem; /* Rounded corners for cards */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        .section-title {
+            color: #8B4513; /* Earthy brown for section titles */
+        }
+        .item-name {
+            color: #4A2B0F; /* Darker brown for item names */
+        }
+        .price {
+            color: #6B8E23; /* Olive green for prices */
+            font-weight: 600; /* Semi-bold price */
+        }
+        .order-btn {
+            background-color: #EF4444; /* bg-red-500 */
+            color: #FFFFFF; /* text-white */
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .order-btn:hover {
+            background-color: #DC2626; /* bg-red-600 */
+        }
         .cart-modal-overlay {
-            /* ... (existing styles) ... */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             display: none; /* Ensure it's hidden initially */
         }
         .cart-modal-overlay.show {
-            /* ... (existing styles) ... */
+            opacity: 1;
+            visibility: visible;
             display: flex; /* Make it visible for transitions */
+        }
+        .cart-modal {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .cart-modal-overlay.show .cart-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .quantity-input {
+            width: 4rem;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.375rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -878,13 +681,23 @@
     </div>
 
     <script type="module">
-        // Firebase initialization is moved outside to the script tag above
-        // This block will contain only the event listeners and logic after Firebase is ready
+        // Import Firebase SDK functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Ensure Firebase variables are accessible
+        // Global variables accessible within this module script
+        let app;
+        let db;
+        let auth;
+        let userId;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
         let cart = []; // Array to store items in the cart
 
-        // Define alertMessage globally or ensure it's accessible within bindEventListeners
+        // Define alertMessage globally within this module script scope
         function alertMessage(message) {
             const existingAlert = document.getElementById('custom-alert-message');
             if (existingAlert) {
@@ -909,8 +722,7 @@
             }, 3000);
         }
 
-        // bindEventListeners function is called once window.onload in the Firebase script finishes
-        // It ensures all DOM elements and Firebase are ready before attaching handlers
+        // This function will contain all DOM-related event listeners and core logic
         function bindEventListeners() {
             const cartItemCountSpan = document.getElementById('cartItemCount');
             const viewCartBtn = document.getElementById('viewCartBtn');
@@ -1062,18 +874,19 @@
                 const selectedPaymentMethod = paymentMethod.value;
 
                 const orderData = {
-                    customerId: window.currentUserId,
+                    customerId: userId, // Use userId from the module scope
                     customerInfo: customerName,
                     items: cart,
                     total: cart.reduce((sum, item) => sum + item.quantity * item.price, 0),
                     paymentMethod: selectedPaymentMethod,
                     status: 'New Order', // Initial status
-                    timestamp: window.firebaseFirestore.serverTimestamp() // Firestore server timestamp
+                    timestamp: serverTimestamp() // Directly use imported serverTimestamp
                 };
 
                 try {
-                    const ordersCollectionRef = window.firebaseFirestore.collection(window.firestoreDb, `artifacts/${window.appId}/public/data/orders`);
-                    await window.firebaseFirestore.addDoc(ordersCollectionRef, orderData);
+                    // Directly use imported collection and addDoc with the 'db' instance
+                    const ordersCollectionRef = collection(db, `artifacts/${appId}/public/data/orders`);
+                    await addDoc(ordersCollectionRef, orderData);
                     console.log("Order successfully written to Firestore:", orderData);
 
                     orderConfirmationDiv.classList.remove('hidden');
@@ -1104,6 +917,36 @@
             // Initial update when page loads
             updateCartCount();
         }
+
+        // Initialize Firebase and then bind event listeners
+        // This runs once the DOM is fully loaded for the module script
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                if (Object.keys(firebaseConfig).length === 0) {
+                    console.error("Firebase config is missing. Please ensure __firebase_config is provided.");
+                    alertMessage("เกิดข้อผิดพลาดในการเชื่อมต่อระบบ: Firebase config หายไป / Error connecting: Firebase config missing.");
+                    return;
+                }
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                console.log("Firebase initialized and user signed in:", userId);
+
+                // Now that Firebase is initialized and variables are set, bind event listeners
+                bindEventListeners();
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                alertMessage("เกิดข้อผิดพลาดในการเชื่อมต่อระบบ / Error connecting to service.");
+            }
+        });
     </script>
 </body>
 </html>
