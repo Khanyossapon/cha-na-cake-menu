@@ -30,9 +30,68 @@
             color: #6B8E23; /* Olive green for prices */
             font-weight: 600; /* Semi-bold price */
         }
-        .lang-switch {
-            font-size: 0.875rem; /* text-sm */
-            color: #6B7280; /* text-gray-500 */
+        .order-btn {
+            background-color: #EF4444; /* bg-red-500 */
+            color: #FFFFFF; /* text-white */
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .order-btn:hover {
+            background-color: #DC2626; /* bg-red-600 */
+        }
+        .cart-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .cart-modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cart-modal {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .cart-modal-overlay.show .cart-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .quantity-input {
+            width: 4rem;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.375rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -45,117 +104,164 @@
             <p class="text-md text-gray-500 mt-2">สแกนและเพลิดเพลินกับเมนูของเรา! / Scan and enjoy our menu!</p>
         </header>
 
-        <!-- Language Switch (Optional - for future enhancement) -->
-        <!--
-        <div class="text-right mb-4">
-            <span class="lang-switch">ภาษา: </span>
-            <a href="#" class="lang-switch font-semibold text-blue-600 hover:underline">ไทย</a> |
-            <a href="#" class="lang-switch hover:underline">English</a>
-        </div>
-        -->
+        <!-- Cart Button Floating at bottom right -->
+        <button id="viewCartBtn" class="fixed bottom-6 right-6 bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center space-x-2 z-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0-14v4m0 0h4m-4 0l-3-3m-3 3h3" />
+            </svg>
+            <span id="cartItemCount" class="text-sm font-bold">0</span>
+        </button>
 
         <!-- Menu Sections Container -->
-        <div class="grid grid-cols-1 gap-8">
+        <div class="grid grid-cols-1 gap-8 mb-20"> <!-- Added mb-20 for space above floating button -->
 
             <!-- Category: เมนูอาหาร (Main Dishes) -->
             <section>
                 <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูอาหาร / Main Dishes</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                     <!-- Item: ข้าวผัดปู,หมู,ทะเล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวผัดปู,หมู,ทะเล" data-en-name="Fried Rice (Crab, Pork, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/FFD700/000000?text=Fried+Rice" alt="ข้าวผัด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดปู,หมู,ทะเล / Fried Rice (Crab, Pork, Seafood)</h3>
                             <p class="text-gray-500 text-sm">พิเศษ 10.- / ธรรมดา 15.- (Extra 10.- / Regular 15.-)</p>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวกระเพรา ไก่,หมู,หมูกรอบ,รวม,ทะเล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวกระเพรา ไก่,หมู,หมูกรอบ,รวม,ทะเล" data-en-name="Holy Basil Stir-fry (Chicken, Pork, Crispy Pork, Mixed, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/8B0000/FFFFFF?text=Basil+Stir-fry" alt="ข้าวกระเพรา" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวกระเพรา ไก่,หมู,หมูกรอบ,รวม,ทะเล / Holy Basil Stir-fry (Chicken, Pork, Crispy Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวคะน้าหมูกรอบ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวคะน้าหมูกรอบ" data-en-name="Rice with Crispy Pork & Chinese Kale" data-price="70">
                         <img src="https://placehold.co/120x120/2E8B57/FFFFFF?text=Crispy+Pork+with+Kale" alt="ข้าวคะน้าหมูกรอบ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวคะน้าหมูกรอบ / Rice with Crispy Pork & Chinese Kale</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวหมูทอด -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวหมูทอด" data-en-name="Fried Pork with Rice" data-price="70">
                         <img src="https://placehold.co/120x120/CD853F/FFFFFF?text=Fried+Pork+Rice" alt="ข้าวหมูทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวหมูทอด / Fried Pork with Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวปีกไก่ทอด -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวปีกไก่ทอด" data-en-name="Fried Chicken Wings with Rice" data-price="70">
                         <img src="https://placehold.co/120x120/FFD700/FFFFFF?text=Fried+Chicken+Wings" alt="ข้าวปีกไก่ทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวปีกไก่ทอด / Fried Chicken Wings with Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
-                    <!-- Item: ข้าวผัดซิก ไก่,หมู,รวม,ทะเล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <!-- Item: ข้าวผัดพริก ไก่,หมู,รวม,ทะเล -->
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวผัดซิก ไก่,หมู,รวม,ทะเล" data-en-name="Signature Fried Rice (Chicken, Pork, Mixed, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/BDB76B/FFFFFF?text=Signature+Fried+Rice" alt="ข้าวผัดซิก" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดซิก ไก่,หมู,รวม,ทะเล / Signature Fried Rice (Chicken, Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวผัดเครื่องแกง ไก่,หมู,หมูกรอบ,รวม,ทะเล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวผัดเครื่องแกง ไก่,หมู,หมูกรอบ,รวม,ทะเล" data-en-name="Curry Paste Fried Rice (Chicken, Pork, Crispy Pork, Mixed, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/8B0000/FFFFFF?text=Curry+Paste+Fried+Rice" alt="ข้าวผัดเครื่องแกง" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดเครื่องแกง ไก่,หมู,หมูกรอบ,รวม,ทะเล / Curry Paste Fried Rice (Chicken, Pork, Crispy Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวไข่เจียว ธรรมดา,หมูสับ,กุ้ง -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวไข่เจียว ธรรมดา,หมูสับ,กุ้ง" data-en-name="Omelette Rice (Plain, Minced Pork, Shrimp)" data-price="60">
                         <img src="https://placehold.co/120x120/FFEFD5/333333?text=Omelette+Rice" alt="ข้าวไข่เจียว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวไข่เจียว ธรรมดา,หมูสับ,กุ้ง / Omelette Rice (Plain, Minced Pork, Shrimp)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ผัดซีอิ๊ว เส้นใหญ่/เส้นหมี่เหลือง ไก่,หมู,รวม,ทะเล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ผัดซีอิ๊ว เส้นใหญ่/เส้นหมี่เหลือง ไก่,หมู,รวม,ทะเล" data-en-name="Pad See Ew (Big Noodles/Yellow Noodles, Chicken, Pork, Mixed, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/CD5C5C/FFFFFF?text=Pad+See+Ew" alt="ผัดซีอิ๊ว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ผัดซีอิ๊ว เส้นใหญ่/เส้นหมี่เหลือง ไก่,หมู,รวม,ทะเล / Pad See Ew (Big Noodles/Yellow Noodles, Chicken, Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ราดหน้า เส้นใหญ่/เส้นบะหมี่กรอบ ไก่,หมู,รวม,ทะเล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ราดหน้า เส้นใหญ่/เส้นบะหมี่กรอบ ไก่,หมู,รวม,ทะเล" data-en-name="Rad Na (Big Noodles/Crispy Noodles, Chicken, Pork, Mixed, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/6A5ACD/FFFFFF?text=Rad+Na" alt="ราดหน้า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ราดหน้า เส้นใหญ่/เส้นบะหมี่กรอบ ไก่,หมู,รวม,ทะเล / Rad Na (Big Noodles/Crispy Noodles, Chicken, Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ต้มจืดเต้าหู้หมูสับ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ต้มจืดเต้าหู้หมูสับ" data-en-name="Clear Soup with Tofu & Minced Pork" data-price="80">
                         <img src="https://placehold.co/120x120/ADD8E6/333333?text=Tofu+Soup" alt="ต้มจืดเต้าหู้หมูสับ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ต้มจืดเต้าหู้หมูสับ / Clear Soup with Tofu & Minced Pork</h3>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวเปล่า -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวเปล่า" data-en-name="Plain Rice" data-price="20">
                         <img src="https://placehold.co/120x120/F5DEB3/333333?text=Plain+Rice" alt="ข้าวเปล่า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวเปล่า / Plain Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 20.- / Price: 20 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,43 +272,63 @@
                 <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูทานเล่น / Snacks</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                     <!-- Item: เฟรนช์ฟรายส์ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="เฟรนช์ฟรายส์" data-en-name="French Fries" data-price="59">
                         <img src="https://placehold.co/120x120/FFC0CB/333333?text=French+Fries" alt="เฟรนช์ฟรายส์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">เฟรนช์ฟรายส์ / French Fries</h3>
                             <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: นักเก็ตช์ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="นักเก็ตช์" data-en-name="Chicken Nuggets" data-price="59">
                         <img src="https://placehold.co/120x120/ADD8E6/333333?text=Chicken+Nuggets" alt="นักเก็ตช์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">นักเก็ตช์ / Chicken Nuggets</h3>
                             <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ชีสบอล -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ชีสบอล" data-en-name="Cheese Balls" data-price="59">
                         <img src="https://placehold.co/120x120/FFDAB9/333333?text=Cheese+Balls" alt="ชีสบอล" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ชีสบอล / Cheese Balls</h3>
                             <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ปีกไก่ทอด -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ปีกไก่ทอด" data-en-name="Fried Chicken Wings" data-price="69">
                         <img src="https://placehold.co/120x120/FFC0CB/333333?text=Fried+Chicken+Wings" alt="ปีกไก่ทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ปีกไก่ทอด / Fried Chicken Wings</h3>
                             <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: หมูทอด (ทานเล่น) -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="หมูทอด" data-en-name="Fried Pork" data-price="69">
                         <img src="https://placehold.co/120x120/B0E0E6/333333?text=Fried+Pork+Snack" alt="หมูทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">หมูทอด / Fried Pork</h3>
                             <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -213,21 +339,29 @@
                 <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูของหวาน / Desserts</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                     <!-- Item: ฮันนี่โทสต์ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ฮันนี่โทสต์" data-en-name="Honey Toast" data-price="139">
                         <img src="https://placehold.co/120x120/FFD700/8B4513?text=Honey+Toast" alt="ฮันนี่โทสต์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ฮันนี่โทสต์ / Honey Toast</h3>
                             <p class="text-gray-500 text-sm">(ไอศกรีม วานิลลา, สตรอว์เบอร์รี่, ช็อกโกแลต, คุกกี้แอนด์ครีม) / (Vanilla, Strawberry, Chocolate, Cookies & Cream Ice Cream)</p>
                             <p class="text-lg price mt-2">ราคา: 139.- / Price: 139 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: คาราเมลโทสต์ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="คาราเมลโทสต์" data-en-name="Caramel Toast" data-price="95">
                         <img src="https://placehold.co/120x120/D2B48C/8B4513?text=Caramel+Toast" alt="คาราเมลโทสต์" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">คาราเมลโทสต์ / Caramel Toast</h3>
                             <p class="text-gray-500 text-sm">(ไอศกรีม วานิลลา, สตรอว์เบอร์รี่, ช็อกโกแลต, คุกกี้แอนด์ครีม) / (Vanilla, Strawberry, Chocolate, Cookies & Cream Ice Cream)</p>
                             <p class="text-lg price mt-2">ราคา: 95.- / Price: 95 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,178 +372,262 @@
                 <h2 class="text-3xl font-bold section-title mb-6 text-center">เมนูส้มตำ / ยำ / Som Tum / Yum</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                     <!-- Item: ตำไทย -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำไทย" data-en-name="Thai Papaya Salad" data-price="60">
                         <img src="https://placehold.co/120x120/FFA07A/FFFFFF?text=Papaya+Salad" alt="ตำไทย" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำไทย / Thai Papaya Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำไทยไข่เค็ม -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำไทยไข่เค็ม" data-en-name="Papaya Salad with Salted Egg" data-price="80">
                         <img src="https://placehold.co/120x120/FF8C00/FFFFFF?text=Salted+Egg+Papaya+Salad" alt="ตำไทยไข่เค็ม" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำไทยไข่เค็ม / Papaya Salad with Salted Egg</h3>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำรวมมิตร -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำรวมมิตร" data-en-name="Mixed Papaya Salad" data-price="120">
                         <img src="https://placehold.co/120x120/DAA520/FFFFFF?text=Mixed+Papaya+Salad" alt="ตำรวมมิตร" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำรวมมิตร / Mixed Papaya Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำปูปลาร้า -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำปูปลาร้า" data-en-name="Papaya Salad with Crab & Fermented Fish Sauce" data-price="60">
                         <img src="https://placehold.co/120x120/8B0000/FFFFFF?text=Crab+Fermented+Fish+Papaya+Salad" alt="ตำปูปลาร้า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำปูปลาร้า / Papaya Salad with Crab & Fermented Fish Sauce</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำแตง -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำแตง" data-en-name="Cucumber Salad" data-price="60">
                         <img src="https://placehold.co/120x120/5F9EA0/FFFFFF?text=Cucumber+Salad" alt="ตำแตง" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำแตง / Cucumber Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำหมูยอ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำหมูยอ" data-en-name="Pork Sausage Salad" data-price="80">
                         <img src="https://placehold.co/120x120/B22222/FFFFFF?text=Pork+Sausage+Salad" alt="ตำหมูยอ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำหมูยอ / Pork Sausage Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำไหลบัวกุ้งสด -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำไหลบัวกุ้งสด" data-en-name="Lotus Stem & Fresh Shrimp Salad" data-price="100">
                         <img src="https://placehold.co/120x120/4682B4/FFFFFF?text=Lotus+Stem+Shrimp+Salad" alt="ตำไหลบัวกุ้งสด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำไหลบัวกุ้งสด / Lotus Stem & Fresh Shrimp Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำกุ้งสด -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำกุ้งสด" data-en-name="Fresh Shrimp Salad" data-price="100">
                         <img src="https://placehold.co/120x120/DC143C/FFFFFF?text=Fresh+Shrimp+Salad" alt="ตำกุ้งสด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำกุ้งสด / Fresh Shrimp Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำเส้นเล็กกุ้งสด -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำเส้นเล็กกุ้งสด" data-en-name="Vermicelli & Fresh Shrimp Salad" data-price="100">
                         <img src="https://placehold.co/120x120/4169E1/FFFFFF?text=Vermicelli+Shrimp+Salad" alt="ตำเส้นเล็กกุ้งสด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำเส้นเล็กกุ้งสด / Vermicelli & Fresh Shrimp Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ตำเส้นเล็กหมูยอ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ตำเส้นเล็กหมูยอ" data-en-name="Vermicelli & Pork Sausage Salad" data-price="80">
                         <img src="https://placehold.co/120x120/87CEEB/FFFFFF?text=Vermicelli+Pork+Sausage+Salad" alt="ตำเส้นเล็กหมูยอ" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ตำเส้นเล็กหมูยอ / Vermicelli & Pork Sausage Salad</h3>
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ต้มยำทะเลรวม -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ต้มยำทะเลรวม" data-en-name="Tom Yum Seafood (Spicy Seafood Soup)" data-price="120">
                         <img src="https://placehold.co/120x120/FF6347/FFFFFF?text=Tom+Yum+Seafood" alt="ต้มยำทะเลรวม" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ต้มยำทะเลรวม / Tom Yum Seafood (Spicy Seafood Soup)</h3>
                             <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ลาบหมู -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ลาบหมู" data-en-name="Spicy Minced Pork Salad (Larb Moo)" data-price="80">
                         <img src="https://placehold.co/120x120/7CFC00/FFFFFF?text=Larb+Moo" alt="ลาบหมู" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ลาบหมู / Spicy Minced Pork Salad (Larb Moo)</h3>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ยำมะม่วง -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ยำมะม่วง" data-en-name="Spicy Mango Salad" data-price="70">
                         <img src="https://placehold.co/120x120/FFD700/8B4513?text=Mango+Salad" alt="ยำมะม่วง" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ยำมะม่วง / Spicy Mango Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ยำวุ้นเส้น -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ยำวุ้นเส้น" data-en-name="Spicy Glass Noodle Salad" data-price="100">
                         <img src="https://placehold.co/120x120/AFEEEE/333333?text=Glass+Noodle+Salad" alt="ยำวุ้นเส้น" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ยำวุ้นเส้น / Spicy Glass Noodle Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ยำมาม่า -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ยำมาม่า" data-en-name="Spicy Instant Noodle Salad" data-price="100">
                         <img src="https://placehold.co/120x120/B0C4DE/333333?text=Mama+Salad" alt="ยำมาม่า" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ยำมาม่า / Spicy Instant Noodle Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ยำเส้นแก้ว -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ยำเส้นแก้ว" data-en-name="Spicy Glass Noodle Salad" data-price="100">
                         <img src="https://placehold.co/120x120/87CEEB/333333?text=Glass+Noodle+Salad" alt="ยำเส้นแก้ว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ยำเส้นแก้ว / Spicy Glass Noodle Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ยำรวมมิตร (ยำ) -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ยำรวมมิตร" data-en-name="Mixed Spicy Salad" data-price="120">
                         <img src="https://placehold.co/120x120/FFE4B5/333333?text=Mixed+Spicy+Salad" alt="ยำรวมมิตร" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ยำรวมมิตร / Mixed Spicy Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวเหนียว -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวเหนียว" data-en-name="Sticky Rice" data-price="10">
                         <img src="https://placehold.co/120x120/F0E68C/333333?text=Sticky+Rice" alt="ข้าวเหนียว" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวเหนียว / Sticky Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 10.- / Price: 10 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: หมูทอด (ส้มตำ/ยำ) -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="หมูทอด" data-en-name="Fried Pork" data-price="69">
                         <img src="https://placehold.co/120x120/DAA520/333333?text=Fried+Pork" alt="หมูทอด" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">หมูทอด / Fried Pork</h3>
                             <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวผัดเล็ก -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวผัดเล็ก" data-en-name="Small Fried Rice" data-price="65">
                         <img src="https://placehold.co/120x120/FFC0CB/FFFFFF?text=Small+Fried+Rice" alt="ข้าวผัดเล็ก" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดเล็ก / Small Fried Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 65-75.- / Price: 65-75 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Item: ข้าวผัดใหญ่ -->
-                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวผัดใหญ่" data-en-name="Large Fried Rice" data-price="130">
                         <img src="https://placehold.co/120x120/FFD700/FFFFFF?text=Large+Fried+Rice" alt="ข้าวผัดใหญ่" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดใหญ่ / Large Fried Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 130-150.- / Price: 130-150 THB</p>
+                            <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -417,5 +635,195 @@
 
         </div>
     </div>
+
+    <!-- Cart Modal Overlay -->
+    <div id="cartModalOverlay" class="cart-modal-overlay hidden">
+        <div id="cartModal" class="cart-modal">
+            <span class="close-btn" id="closeCartModal">&times;</span>
+            <h2 class="text-2xl font-bold section-title mb-4">ตะกร้าสินค้า / Your Cart</h2>
+            <div id="cartItems" class="mb-4 max-h-64 overflow-y-auto">
+                <!-- Cart items will be appended here by JavaScript -->
+                <p id="emptyCartMessage" class="text-gray-500 text-center">ยังไม่มีสินค้าในตะกร้า / No items in cart.</p>
+            </div>
+            <div class="border-t pt-4 flex justify-between items-center">
+                <p class="text-xl font-bold">รวม: <span id="cartTotal">0</span>.- THB</p>
+                <button id="confirmOrderBtn" class="order-btn bg-green-500 hover:bg-green-600 px-4 py-2">ยืนยันการสั่งซื้อ / Confirm Order</button>
+            </div>
+            <div id="orderConfirmation" class="mt-4 p-3 bg-green-100 text-green-700 rounded-lg hidden">
+                <p class="font-semibold">สั่งซื้อสำเร็จ! / Order Confirmed!</p>
+                <p>ทางร้านจะดำเนินการตามคำสั่งซื้อของคุณ / The restaurant will process your order.</p>
+                <p>กรุณารอรับการยืนยันจากพนักงาน / Please wait for staff confirmation.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = []; // Array to store items in the cart
+
+        const cartItemCountSpan = document.getElementById('cartItemCount');
+        const viewCartBtn = document.getElementById('viewCartBtn');
+        const cartModalOverlay = document.getElementById('cartModalOverlay');
+        const closeCartModalBtn = document.getElementById('closeCartModal');
+        const cartItemsContainer = document.getElementById('cartItems');
+        const emptyCartMessage = document.getElementById('emptyCartMessage');
+        const cartTotalSpan = document.getElementById('cartTotal');
+        const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+        const orderConfirmationDiv = document.getElementById('orderConfirmation');
+
+        // Function to update cart display and total
+        function updateCartDisplay() {
+            cartItemsContainer.innerHTML = ''; // Clear current cart items
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                confirmOrderBtn.disabled = true; // Disable confirm button if cart is empty
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                confirmOrderBtn.disabled = false; // Enable confirm button if cart has items
+                cart.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'last:border-b-0');
+                    itemElement.innerHTML = `
+                        <div>
+                            <p class="font-semibold">${item.name} <span class="text-gray-600 text-sm">(${item.enName})</span></p>
+                            <p class="text-sm text-gray-500">จำนวน: ${item.quantity} x ${item.price}.-</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold">${(item.quantity * item.price).toFixed(0)}.-</span>
+                            <button class="text-red-500 hover:text-red-700 ml-2 remove-from-cart-btn" data-index="${index}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm2 10a1 1 0 001-1V9a1 1 0 10-2 0v8a1 1 0 001 1z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                    total += item.quantity * item.price;
+                });
+
+                // Add event listeners for remove buttons
+                document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const index = event.currentTarget.dataset.index;
+                        cart.splice(index, 1); // Remove item from cart array
+                        updateCartDisplay(); // Update display
+                        updateCartCount(); // Update total item count on floating button
+                    });
+                });
+            }
+            cartTotalSpan.textContent = total.toFixed(0);
+        }
+
+        // Function to update the floating cart item count
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartItemCountSpan.textContent = totalItems;
+        }
+
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const itemCard = event.target.closest('.menu-card');
+                const itemName = itemCard.dataset.name;
+                const itemEnName = itemCard.dataset.enName;
+                const itemPrice = parseFloat(itemCard.dataset.price);
+                const quantityInput = itemCard.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+
+                // Find if item already exists in cart
+                const existingItemIndex = cart.findIndex(item => item.name === itemName);
+
+                if (existingItemIndex > -1) {
+                    // Update quantity if item exists
+                    cart[existingItemIndex].quantity += quantity;
+                } else {
+                    // Add new item to cart
+                    cart.push({
+                        name: itemName,
+                        enName: itemEnName,
+                        price: itemPrice,
+                        quantity: quantity
+                    });
+                }
+                quantityInput.value = 1; // Reset quantity input to 1 after adding
+                updateCartCount();
+                updateCartDisplay(); // Update cart display in modal (even if not open)
+                alertMessage('เพิ่มสินค้าลงตะกร้าแล้ว / Item added to cart!'); // Use a custom message box if alert() is disallowed
+            });
+        });
+
+        // Show/Hide Cart Modal
+        viewCartBtn.addEventListener('click', () => {
+            cartModalOverlay.classList.add('show');
+            updateCartDisplay(); // Ensure cart is up-to-date when opened
+        });
+
+        closeCartModalBtn.addEventListener('click', () => {
+            cartModalOverlay.classList.remove('show');
+            orderConfirmationDiv.classList.add('hidden'); // Hide confirmation on close
+        });
+
+        // Close modal when clicking outside of it
+        cartModalOverlay.addEventListener('click', (event) => {
+            if (event.target === cartModalOverlay) {
+                cartModalOverlay.classList.remove('show');
+                orderConfirmationDiv.classList.add('hidden'); // Hide confirmation on close
+            }
+        });
+
+        // Confirm Order (Client-side simulation)
+        confirmOrderBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alertMessage('ตะกร้าสินค้าว่างเปล่า ไม่สามารถยืนยันการสั่งซื้อได้ / Cart is empty, cannot confirm order.');
+                return;
+            }
+
+            // Simulate sending order (in a real app, this would send data to a server)
+            console.log('Order confirmed:', cart);
+
+            // Display confirmation message in the modal
+            orderConfirmationDiv.classList.remove('hidden');
+
+            // Clear cart after a short delay (simulating order processing)
+            setTimeout(() => {
+                cart = [];
+                updateCartCount();
+                updateCartDisplay();
+                // Optionally close modal after confirmation
+                // cartModalOverlay.classList.remove('show');
+            }, 3000); // Clear cart after 3 seconds
+        });
+
+        // Simple custom alert message function (replaces native alert())
+        function alertMessage(message) {
+            const existingAlert = document.getElementById('custom-alert-message');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+
+            const alertDiv = document.createElement('div');
+            alertDiv.id = 'custom-alert-message';
+            alertDiv.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md z-[1001] transition-all duration-300 transform scale-0 opacity-0';
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+
+            // Show alert
+            setTimeout(() => {
+                alertDiv.classList.remove('scale-0', 'opacity-0');
+                alertDiv.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            // Hide alert after 3 seconds
+            setTimeout(() => {
+                alertDiv.classList.remove('scale-100', 'opacity-100');
+                alertDiv.classList.add('scale-0', 'opacity-0');
+                setTimeout(() => alertDiv.remove(), 300); // Remove from DOM after transition
+            }, 3000);
+        }
+
+        // Initial update when page loads
+        updateCartCount();
+    </script>
 </body>
 </html>
