@@ -55,10 +55,14 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
+            /* เพิ่ม display: none; ที่นี่เพื่อซ่อนตั้งแต่แรก และจะถูกเปลี่ยนเป็น flex โดย JS */
+            display: none;
         }
         .cart-modal-overlay.show {
             opacity: 1;
             visibility: visible;
+            /* ต้องมี display: flex; ตรงนี้เพื่อให้มันแสดงผลและใช้ flexbox */
+            display: flex;
         }
         .cart-modal {
             background-color: #FFFFFF;
@@ -127,7 +131,7 @@
                             <p class="text-gray-500 text-sm">พิเศษ 10.- / ธรรมดา 15.- (Extra 10.- / Regular 15.-)</p>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -139,7 +143,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวกระเพรา ไก่,หมู,หมูกรอบ,รวม,ทะเล / Holy Basil Stir-fry (Chicken, Pork, Crispy Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -151,7 +155,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวคะน้าหมูกรอบ / Rice with Crispy Pork & Chinese Kale</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -163,7 +167,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวหมูทอด / Fried Pork with Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -175,7 +179,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวปีกไก่ทอด / Fried Chicken Wings with Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -184,10 +188,10 @@
                     <div class="menu-card p-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4" data-name="ข้าวผัดซิก ไก่,หมู,รวม,ทะเล" data-en-name="Signature Fried Rice (Chicken, Pork, Mixed, Seafood)" data-price="60">
                         <img src="https://placehold.co/120x120/BDB76B/FFFFFF?text=Signature+Fried+Rice" alt="ข้าวผัดซิก" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
                         <div class="flex-grow text-center sm:text-left">
-                            <h3 class="text-xl font-semibold item-name">ข้าวผัดพริก ไก่,หมู,รวม,ทะเล / Signature Fried Rice (Chicken, Pork, Mixed, Seafood)</h3>
+                            <h3 class="text-xl font-semibold item-name">ข้าวผัดซิก ไก่,หมู,รวม,ทะเล / Signature Fried Rice (Chicken, Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -199,7 +203,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดเครื่องแกง ไก่,หมู,หมูกรอบ,รวม,ทะเล / Curry Paste Fried Rice (Chicken, Pork, Crispy Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -211,7 +215,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวไข่เจียว ธรรมดา,หมูสับ,กุ้ง / Omelette Rice (Plain, Minced Pork, Shrimp)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -223,7 +227,7 @@
                             <h3 class="text-xl font-semibold item-name">ผัดซีอิ๊ว เส้นใหญ่/เส้นหมี่เหลือง ไก่,หมู,รวม,ทะเล / Pad See Ew (Big Noodles/Yellow Noodles, Chicken, Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -235,7 +239,7 @@
                             <h3 class="text-xl font-semibold item-name">ราดหน้า เส้นใหญ่/เส้นบะหมี่กรอบ ไก่,หมู,รวม,ทะเล / Rad Na (Big Noodles/Crispy Noodles, Chicken, Pork, Mixed, Seafood)</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -247,7 +251,7 @@
                             <h3 class="text-xl font-semibold item-name">ต้มจืดเต้าหู้หมูสับ / Clear Soup with Tofu & Minced Pork</h3>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -259,7 +263,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวเปล่า / Plain Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 20.- / Price: 20 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -278,7 +282,7 @@
                             <h3 class="text-xl font-semibold item-name">เฟรนช์ฟรายส์ / French Fries</h3>
                             <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -290,7 +294,7 @@
                             <h3 class="text-xl font-semibold item-name">นักเก็ตช์ / Chicken Nuggets</h3>
                             <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -302,7 +306,7 @@
                             <h3 class="text-xl font-semibold item-name">ชีสบอล / Cheese Balls</h3>
                             <p class="text-lg price mt-2">ราคา: 59.- / Price: 59 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -314,7 +318,7 @@
                             <h3 class="text-xl font-semibold item-name">ปีกไก่ทอด / Fried Chicken Wings</h3>
                             <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -326,7 +330,7 @@
                             <h3 class="text-xl font-semibold item-name">หมูทอด / Fried Pork</h3>
                             <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -346,7 +350,7 @@
                             <p class="text-gray-500 text-sm">(ไอศกรีม วานิลลา, สตรอว์เบอร์รี่, ช็อกโกแลต, คุกกี้แอนด์ครีม) / (Vanilla, Strawberry, Chocolate, Cookies & Cream Ice Cream)</p>
                             <p class="text-lg price mt-2">ราคา: 139.- / Price: 139 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -359,7 +363,7 @@
                             <p class="text-gray-500 text-sm">(ไอศกรีม วานิลลา, สตรอว์เบอร์รี่, ช็อกโกแลต, คุกกี้แอนด์ครีม) / (Vanilla, Strawberry, Chocolate, Cookies & Cream Ice Cream)</p>
                             <p class="text-lg price mt-2">ราคา: 95.- / Price: 95 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -378,7 +382,7 @@
                             <h3 class="text-xl font-semibold item-name">ตำไทย / Thai Papaya Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -390,7 +394,7 @@
                             <h3 class="text-xl font-semibold item-name">ตำไทยไข่เค็ม / Papaya Salad with Salted Egg</h3>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -403,7 +407,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -415,7 +419,7 @@
                             <h3 class="text-xl font-semibold item-name">ตำปูปลาร้า / Papaya Salad with Crab & Fermented Fish Sauce</h3>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -428,7 +432,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 60.- / Price: 60 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -441,7 +445,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -454,7 +458,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -467,7 +471,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -480,7 +484,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -493,7 +497,7 @@
                             <p class="text-gray-500 text-sm">(ไทย, ร้า) / (Thai, Fermented Fish Sauce)</p>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -505,7 +509,7 @@
                             <h3 class="text-xl font-semibold item-name">ต้มยำทะเลรวม / Tom Yum Seafood (Spicy Seafood Soup)</h3>
                             <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -517,7 +521,7 @@
                             <h3 class="text-xl font-semibold item-name">ลาบหมู / Spicy Minced Pork Salad (Larb Moo)</h3>
                             <p class="text-lg price mt-2">ราคา: 80.- / Price: 80 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -529,7 +533,7 @@
                             <h3 class="text-xl font-semibold item-name">ยำมะม่วง / Spicy Mango Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 70.- / Price: 70 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -541,7 +545,7 @@
                             <h3 class="text-xl font-semibold item-name">ยำวุ้นเส้น / Spicy Glass Noodle Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -553,7 +557,7 @@
                             <h3 class="text-xl font-semibold item-name">ยำมาม่า / Spicy Instant Noodle Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -565,7 +569,7 @@
                             <h3 class="text-xl font-semibold item-name">ยำเส้นแก้ว / Spicy Glass Noodle Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 100.- / Price: 100 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -577,7 +581,7 @@
                             <h3 class="text-xl font-semibold item-name">ยำรวมมิตร / Mixed Spicy Salad</h3>
                             <p class="text-lg price mt-2">ราคา: 120.- / Price: 120 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -589,7 +593,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวเหนียว / Sticky Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 10.- / Price: 10 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -601,7 +605,7 @@
                             <h3 class="text-xl font-semibold item-name">หมูทอด / Fried Pork</h3>
                             <p class="text-lg price mt-2">ราคา: 69.- / Price: 69 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -613,7 +617,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดเล็ก / Small Fried Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 65-75.- / Price: 65-75 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -625,7 +629,7 @@
                             <h3 class="text-xl font-semibold item-name">ข้าวผัดใหญ่ / Large Fried Rice</h3>
                             <p class="text-lg price mt-2">ราคา: 130-150.- / Price: 130-150 THB</p>
                             <div class="flex items-center justify-center sm:justify-start mt-3 space-x-2">
-                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, this.value);">
+                                <input type="number" value="1" min="1" class="quantity-input border rounded-md p-1 text-center" onchange="this.value = Math.max(1, parseInt(this.value) || 1);">
                                 <button class="order-btn add-to-cart-btn">เพิ่มลงตะกร้า / Add to Cart</button>
                             </div>
                         </div>
@@ -637,7 +641,7 @@
     </div>
 
     <!-- Cart Modal Overlay -->
-    <div id="cartModalOverlay" class="cart-modal-overlay hidden">
+    <div id="cartModalOverlay" class="cart-modal-overlay">
         <div id="cartModal" class="cart-modal">
             <span class="close-btn" id="closeCartModal">&times;</span>
             <h2 class="text-2xl font-bold section-title mb-4">ตะกร้าสินค้า / Your Cart</h2>
@@ -755,13 +759,21 @@
 
         // Show/Hide Cart Modal
         viewCartBtn.addEventListener('click', () => {
-            cartModalOverlay.classList.add('show');
+            cartModalOverlay.style.display = 'flex'; // Make it visible for transitions
+            // ใช้ setTimeout เล็กน้อยเพื่อให้ display มีผลก่อนที่ transition จะเริ่ม
+            setTimeout(() => {
+                cartModalOverlay.classList.add('show');
+            }, 10);
             updateCartDisplay(); // Ensure cart is up-to-date when opened
         });
 
         closeCartModalBtn.addEventListener('click', () => {
             cartModalOverlay.classList.remove('show');
             orderConfirmationDiv.classList.add('hidden'); // Hide confirmation on close
+            // ซ่อน display หลังจาก transition เสร็จสิ้น
+            setTimeout(() => {
+                cartModalOverlay.style.display = 'none';
+            }, 300); // 300ms คือระยะเวลา transition ของ opacity/visibility
         });
 
         // Close modal when clicking outside of it
@@ -769,6 +781,10 @@
             if (event.target === cartModalOverlay) {
                 cartModalOverlay.classList.remove('show');
                 orderConfirmationDiv.classList.add('hidden'); // Hide confirmation on close
+                // ซ่อน display หลังจาก transition เสร็จสิ้น
+                setTimeout(() => {
+                    cartModalOverlay.style.display = 'none';
+                }, 300); // 300ms คือระยะเวลา transition ของ opacity/visibility
             }
         });
 
